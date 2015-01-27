@@ -159,11 +159,71 @@
 	scheme to advertise all MPLS SPT paths in a domain.
 	</t>
 
-	<t>The ability to do explicit routing based on stacked labels,
+	<t>The ability to do explicit path routing based on stacked labels,
 	constructed at the Hypervisors/Servers, without running
 	conventional TE-protocols like for example RSVP-TE is a lightweight
 	way to scale the Data Center Fabric.
 	</t>
+    </section>
+
+    <section title="Deployment Considerations">
+
+      <t>Depending on the Sophistication of the MPLS stack at the
+      Hypervisor / Server there are various levels of considerations
+      for Deployement.
+      </t>
+
+      <section title="BGP-LU as Server Control Plane">
+	<t>In this case the Hypervisor / Server has a "client-only"
+	BGP-LU stack in order to interface to the network. This is the
+	most distributed way of building label switched paths across
+	the network. As soon as there is a reachability change then
+	all of the Hypervisors / Servers get notified instantly.
+	There is almsot no time-lag for updating servers.
+	</t>
+
+	<t>Most of the implementation complexity of a BGP implementation
+	comes from the BGP Update generation subsystem. For a client-only BGP
+	implementation this is fortunately neglectible as typically
+	one or two (for redundancy reasons) BGP sessions are required.
+	So the BGP Update Generation complexity stays limited.
+	</t>
+
+	<t>In case a restart of the first-hop router needs to be performed
+	there may be some forwarding state churn at the Hypervisor /
+	Server. It would be desireable that upon control-plane restart
+	the Network node uses the same label-allocations than in the
+	previous incarnation. Unfortunetely none of the BGP graceful
+	restart extensions allows to re-aquire previous incarnations
+	label-mapping state from the network. Therefore a restarting node
+	will be allocating FECs to labels in temporal incoming order.
+	This degrades to pseudo-random, non-predictable label allocations.
+	It is desireable that a BGP-LU implementation allocates the
+	labels in a deterministic way, such that temporal
+	control-plane loss does not impact forwarding between the
+	Hypervisor / Server and the network.
+	</t>
+
+	<t>A BGP-LU Prefix SID speaking networking node MUST implement a MPLS
+	label-allocation strategy which produces a deterministic,
+	local allocated label-block for all of its Prefix SIDs.
+	</t>
+
+	<t>For example an Implementation MAY statically allocate a Label
+	Base of 800000 and a block-size of 16000 labels and delegate
+	that label block exclusively to BGP-LU Prefix SID allocations,
+	such that the same label-base is being used across
+	control-plane restarts.
+	</t>
+
+      </section>
+
+      <section title="Labeled-ARP as Server Control Plane">
+      </section>
+
+      <section title="Static Labels and Controller as Server Control Plane">
+      </section>
+
     </section>
 
     <section title="BGP Prefix-SID Attribute">
