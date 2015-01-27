@@ -177,11 +177,6 @@
       <t>
 	<list style="symbols">
 	  <t>Type:  A single octet encoding the TLV Type.
-	  Type 1: "Label Index TLV",
-	  Type 2: "Label Base TLV" and
-	  Type 3: "Label Range TLV"
-	  are defined in this document. 
-	  Use of other TLV types is outside the scope of this document.
 	  Unrecognized Types are preserved and propagated. In order to
 	  compare NLRIs with unknown TLVs all TLVs MUST be ordered in ascending
 	  order by TLV Type. If there are more TLVs of the same type, then the
@@ -200,6 +195,24 @@
 
 	</list>
       </t>
+
+      <t>The following TLV types are defined in this document:</t>
+
+          <texttable anchor="PREFIX-SID-TLVS" title="Prefix SID TLVs">
+            <ttcol align="center">Type</ttcol>
+            <ttcol align="left">Name</ttcol>
+
+	    <c>1</c>
+            <c>Label Index</c>
+          
+	    <c>2</c>
+            <c>Label Base</c>
+          
+	    <c>3</c>
+            <c>Label Range</c>
+          </texttable>
+
+      <t>Use of other TLV types is outside the scope of this document.</t>
 
       <section title="Label Index TLV">
 	<t>
@@ -256,9 +269,19 @@
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>
-	This documents does not request any action from IANA.
-      </t>
+      <t>This document requests a code point from the BGP Path Attributes
+      registry named 'Prefix SID'</t>
+
+      <t>This document requests creation of a new registry for BGP
+      Prefix SID TLVs. Value 0 is reserved. The maximum value is 255.
+      The registry will be initialized as
+      shown in <xref target="PREFIX-SID-TLVS"/>. Allocations within the registry
+      will require documentation of the proposed use of the allocated
+      value (=Specification required) and
+      approval by the Designated Expert assigned by the IESG (see <xref
+      target="RFC5226"></xref>).</t>
+
+
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -274,6 +297,7 @@
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.3031.xml"?>
       <?rfc include="reference.RFC.3107.xml"?>
+      <?rfc include="reference.RFC.5226.xml"?>
     </references>
 
     <references title="Informative References">
