@@ -20,7 +20,7 @@
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
-    <author fullname="Hannes Gredler" initials="H" surname="Gredler" role="editor">
+    <author fullname="Hannes Gredler" initials="H" surname="Gredler">
       <organization>Juniper Networks, Inc.</organization>
       <address>
 	<postal>
@@ -57,10 +57,10 @@
 	In most MPLS deployments the ingress of a MPLS tunnel
 	is an IP router. Availability of MPLS forwarding stacks for host
 	operating systems is extending the MPLS perimeter
-	to Hypervisors. Recent Data Center designs are using an
+	to Hypervisors and Servers. Recent Data Center designs are using an
 	IGP-less routing paradigm based on massive ECMP multipath
 	using external BGP.	
-	This documents outlines how Hypervisors may interact with the
+	This documents outlines how Hypervisors and Servers may interact with the
 	MPLS control- and data plane using extensions to the
 	BGP labeled unicast protocol (BGP-LU).
       </t>
@@ -91,7 +91,8 @@
 	Because of the IGP-less routing paradigm
 	topology information gets lost. Particularly
 	the ability to direct traffic to a specific node
-	and hence the ability to do traffic-engineering
+	and hence the ability to do construct explicit paths
+	denominated by a set of nodes for traffic-engineering
 	is of interest.
 
 	BGP-LU today may advertise a MPLS transport path between
@@ -99,7 +100,7 @@
 	This document describes extensions to the BGP-LU protocol
 	such that in addition to the advertised MPLS label-switched
 	paths (LSP) all potential MPLS label-switched paths of
-	a given node in the Data Center get visible to the ingress router.
+	any given node in the Data Center are expsed to ingress nodes.
       </t>
 
       <t>
@@ -137,11 +138,32 @@
 
     <section title="Motivation, Rationale and Applicability">
       <t>
-	BGP-LU is often just seen as a 'stitching' protocol for
-	connecting Autonomous Systems. BGP-LU is often not viewed
-	as a viable protocol for solving the Inter-domain
-	traffic-engineering problem.
-      </t>
+	The specifications for Segment Routing
+	( <xref target="I-D.ietf-isis-segment-routing-extensions"></xref> and
+	<xref target="I-D.ietf-ospf-segment-routing-extensions"></xref> )
+	provide extensions for setting up hop-by-hop shortest path
+	routed MPLS LSPs. The used Protocol semantics are:</t>
+
+	<t>
+	  <list style="symbols">
+	    <t>Domain-wide Index</t>
+	    <t>Local Label-Base</t>
+	    <t>Local Label Range</t>
+	  </list>
+	</t>
+
+	<t>advertised by any router in an IGP domain. This not only
+	sets up MPLS sink-trees to each egress router in a domain, but
+	also allows to steer traffic using stacks of node labels.
+	The chosen protocol semantics are essentially a compression
+	scheme to advertise all MPLS SPT paths in a domain.
+	</t>
+
+	<t>The ability to do explicit routing based on stacked labels,
+	constructed at the Hypervisors/Servers, without running
+	conventional TE-protocols like for example RSVP-TE is a lightweight
+	way to scale the Data Center Fabric.
+	</t>
     </section>
 
     <section title="BGP Prefix-SID Attribute">
@@ -303,6 +325,8 @@
     <references title="Informative References">
       <?rfc include="reference.I-D.ietf-rtgwg-bgp-routing-large-dc"?>
       <?rfc include="reference.I-D.ietf-mpls-seamless-mpls"?>
+      <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.ietf-ospf-segment-routing-extensions"?>
     </references>
 
   </back>
