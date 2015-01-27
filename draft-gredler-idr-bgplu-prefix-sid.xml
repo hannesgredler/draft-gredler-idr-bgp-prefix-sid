@@ -58,7 +58,7 @@
 	is an IP router. Availability of MPLS forwarding stacks for host
 	operating systems is extending the MPLS perimeter
 	to Hypervisors and Servers. Recent Data Center designs are using an
-	IGP-less routing paradigm based on massive ECMP multipath
+	IGP-less routing paradigm based on massive ECMP multi path
 	using external BGP.	
 	This documents outlines how Hypervisors and Servers may interact with the
 	MPLS control- and data plane using extensions to the
@@ -79,7 +79,7 @@
       <t>
 	Recent Datacenter routing designs are modeled like shown in
 	Figure <xref target="DC_DESIGN"/>. Rather than using an IGP
-	plus internal BGP (iBGP), an IGP-less design is favoured
+	plus internal BGP (iBGP), an IGP-less design is favored
 	for disseminating routing information. See
         <xref target="I-D.ietf-rtgwg-bgp-routing-large-dc"></xref>
 	for rationale and detailed information why and how to do so.
@@ -100,7 +100,7 @@
 	This document describes extensions to the BGP-LU protocol
 	such that in addition to the advertised MPLS label-switched
 	paths (LSP) all potential MPLS label-switched paths of
-	any given node in the Data Center are expsed to ingress nodes.
+	any given node in the Data Center are exposed to ingress nodes.
       </t>
 
       <t>
@@ -170,43 +170,29 @@
 
       <t>Depending on the Sophistication of the MPLS stack at the
       Hypervisor / Server there are various levels of considerations
-      for Deployement.
+      for deployment.
       </t>
 
-      <section title="BGP-LU as Server Control Plane">
-	<t>In this case the Hypervisor / Server has a "client-only"
-	BGP-LU stack in order to interface to the network. This is the
-	most distributed way of building label switched paths across
-	the network. As soon as there is a reachability change then
-	all of the Hypervisors / Servers get notified instantly.
-	There is almsot no time-lag for updating servers.
-	</t>
-
-	<t>Most of the implementation complexity of a BGP implementation
-	comes from the BGP Update generation subsystem. For a client-only BGP
-	implementation this is fortunately neglectible as typically
-	one or two (for redundancy reasons) BGP sessions are required.
-	So the BGP Update Generation complexity stays limited.
-	</t>
-
+      <section anchor="RESTART" title="Control plane restart">
 	<t>In case a restart of the first-hop router needs to be performed
 	there may be some forwarding state churn at the Hypervisor /
-	Server. It would be desireable that upon control-plane restart
+	Server. It would be desirable that upon control-plane restart
 	the Network node uses the same label-allocations than in the
-	previous incarnation. Unfortunetely none of the BGP graceful
+	previous incarnation. Unfortunately none of the BGP graceful
 	restart extensions allows to re-aquire previous incarnations
 	label-mapping state from the network. Therefore a restarting node
 	will be allocating FECs to labels in temporal incoming order.
 	This degrades to pseudo-random, non-predictable label allocations.
-	It is desireable that a BGP-LU implementation allocates the
+	It is desirable that a BGP-LU implementation allocates the
 	labels in a deterministic way, such that temporal
 	control-plane loss does not impact forwarding between the
 	Hypervisor / Server and the network.
 	</t>
 
-	<t>A BGP-LU Prefix SID speaking networking node MUST implement a MPLS
-	label-allocation strategy which produces a deterministic,
-	local allocated label-block for all of its Prefix SIDs.
+	<t>A BGP-LU Prefix SID speaking networking node MUST therefore
+	implement a MPLS label-allocation strategy which produces a
+	deterministic, local allocated label-block for all of its
+	Prefix SIDs.
 	</t>
 
 	<t>For example an Implementation MAY statically allocate a Label
@@ -215,18 +201,61 @@
 	such that the same label-base is being used across
 	control-plane restarts.
 	</t>
+      </section>
+
+      <section title="BGP-LU as Server Control Plane">
+	<t>In this case the Hypervisor / Server has a "client-only"
+	BGP-LU stack in order to interface to the network. This is the
+	most distributed way of building label switched paths across
+	the network. As soon as there is a reachability change then
+	all of the Hypervisors / Servers get notified instantly.
+	There is almost no time-lag for updating servers due to the
+	inherent PUSH model of the BGP Protocol.
+	</t>
+
+	<t>Most of the implementation complexity of a BGP implementation
+	comes from the BGP Update generation subsystem. For a client-only BGP
+	implementation this is fortunately negligible as typically
+	one or two (for redundancy reasons) BGP sessions are required.
+	So the BGP Update Generation complexity stays limited.
+	</t>
 
       </section>
 
       <section title="Labeled-ARP as Server Control Plane">
+	<t>The Labeled ARP Protocol
+        <xref target="I-D.kompella-mpls-larp"></xref>
+	may be used as a lightweight alternative to the BGP-LU protocol.
+	Labeled ARP is a soft-state protocol and therefore needs
+	special consideration fo refresh-timers, Labels in the network etc.
+	needs to be taken. Yet it is a distributed variant of LSP
+	state propagation and hence re-acts immediately to network
+	topology changes / label to FEC changes.
+	</t>
       </section>
 
       <section title="Static Labels and Controller as Server Control Plane">
+	<t>
+	  Static labels do not need a control-plane sessions between
+	  Hypervisors / Servers and the network. The assumption is that
+	  an external controller transfers the routing/label information
+	  into the Hypervisor / Server. The main disadvantage of that
+	  model is that the update process is not distributed and hence
+	  a controller needs to have excellent horizontal scaling
+	  abilities in order to update order of 100K routes/labels to
+	  order of 100K servers.
+	</t>
       </section>
 
     </section>
 
     <section title="BGP Prefix-SID Attribute">
+      <t>In order to facilitate dense packing of Network nodes and
+      Node labels to a deterministic label-range like described in
+      <xref target="RESTART"></xref> a new Protocol extension called
+      the "BGP Prefix SID Attribute" is proposed.
+      </t>
+
       <t>
 	The BGP Prefix SID is a new optional, transitive BGP path
 	attribute.  The attribute type code for BGP Prefix SID attribute is
@@ -387,6 +416,7 @@
       <?rfc include="reference.I-D.ietf-mpls-seamless-mpls"?>
       <?rfc include="reference.I-D.ietf-isis-segment-routing-extensions"?>
       <?rfc include="reference.I-D.ietf-ospf-segment-routing-extensions"?>
+      <?rfc include="reference.I-D.kompella-mpls-larp"?>
     </references>
 
   </back>
