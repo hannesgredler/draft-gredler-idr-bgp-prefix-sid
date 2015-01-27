@@ -144,6 +144,111 @@
       </t>
     </section>
 
+    <section title="BGP Prefix-SID Attribute">
+      <t>
+	The BGP Prefix SID is a new optional, transitive BGP path
+	attribute.  The attribute type code for BGP Prefix SID attribute is
+	to be assigned by IANA. 
+      </t>
+
+      <t>
+	The value field of the BGP Prefix SID attribute is defined
+	here to be a set of elements encoded as "Type/Length/Value"
+	(i.e., a set of TLVs).
+	Each such TLV is encoded as shown in Figure
+	<xref target="TLV-figure"></xref>.
+      </t>
+
+      <t>
+        <figure anchor="TLV-figure" title="TLV format">
+          <artwork>
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |       Type    |               Length          |               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+               |
+  ~                                                               ~
+  |                         Value (variable)                      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            </artwork>
+          </figure>
+      </t>
+
+      <t>
+	<list style="symbols">
+	  <t>Type:  A single octet encoding the TLV Type.
+	  Type 1: "Label Index TLV",
+	  Type 2: "Label Base TLV" and
+	  Type 3: "Label Range TLV"
+	  are defined in this document. 
+	  Use of other TLV types is outside the scope of this document.
+	  Unrecognized Types are preserved and propagated. In order to
+	  compare NLRIs with unknown TLVs all TLVs MUST be ordered in ascending
+	  order by TLV Type. If there are more TLVs of the same type, then the
+	  TLVs MUST be ordered in ascending order of the TLV value within the
+	  TLVs with the same type.  All TLVs that are not specified as mandatory
+	  are considered optional.
+	  </t>
+
+	  <t>Length: Two octets encoding the length of the value portion in octets
+	  (thus a TLV with no value portion would have a length of zero). The TLV
+          is not padded to four-octet alignment. 
+	  </t>
+
+	  <t>Value: A field containing zero or more octets.
+	  </t>
+
+	</list>
+      </t>
+
+      <section title="Label Index TLV">
+	<t>
+	  <list style="symbols">
+	    <t>Type: 1
+	    </t>
+
+	    <t>Length: 4 
+	    </t>
+
+	    <t>Value: Label Index
+	    </t>
+	  </list>
+	</t>
+      </section>
+
+      <section title="Label Base TLV">
+	<t>
+	  <list style="symbols">
+	    <t>Type: 2
+	    </t>
+
+	    <t>Length: 3 
+	    </t>
+
+	    <t>Value: Label Base
+	    </t>
+	  </list>
+	</t>
+      </section>
+
+      <section title="Label Range TLV">
+	<t>
+	  <list style="symbols">
+	    <t>Type: 3
+	    </t>
+
+	    <t>Length: 3 
+	    </t>
+
+	    <t>Value: Label Range
+	    </t>
+	  </list>
+	</t>
+      </section>
+
+
+
+    </section>
     
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>Many thanks to TBD
