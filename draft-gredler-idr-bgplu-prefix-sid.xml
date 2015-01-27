@@ -227,7 +227,7 @@
         <xref target="I-D.kompella-mpls-larp"></xref>
 	may be used as a lightweight alternative to the BGP-LU protocol.
 	Labeled ARP is a soft-state protocol and therefore needs
-	special consideration fo refresh-timers, Labels in the network etc.
+	special consideration for e.g Refresh-timers, Labels in the network etc.
 	needs to be taken. Yet it is a distributed variant of LSP
 	state propagation and hence re-acts immediately to network
 	topology changes / label to FEC changes.
