@@ -338,6 +338,9 @@
 	    </t>
 	  </list>
 	</t>
+
+	<t>Only one Label Index TLV per Prefix SID Attribute is allowed.</t>
+
       </section>
 
       <section title="Label Base TLV">
@@ -353,6 +356,10 @@
 	    </t>
 	  </list>
 	</t>
+
+	<t>One or more occurences of the Label Base TLV are allowed. A
+	Label Base TLV MUST be followed by a Label Range TLV.</t>
+
       </section>
 
       <section title="Label Range TLV">
@@ -368,6 +375,10 @@
 	    </t>
 	  </list>
 	</t>
+
+	<t>One or more occurences of the Label Range TLV are allowed. A
+	Label Range TLV MUST be preceeded by a Label Range TLV.</t>
+
       </section>
 
 
