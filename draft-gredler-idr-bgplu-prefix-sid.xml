@@ -35,7 +35,7 @@
     </author>
 
 
-    <date day="27" month="January" year="2015"/>
+    <date day="29" month="January" year="2015"/>
 
     <area>Routing</area>
 
@@ -164,6 +164,14 @@
 	conventional TE-protocols like for example RSVP-TE is a lightweight
 	way to scale the Data Center Fabric.
 	</t>
+
+	<t>In order to support deployments of Segment Routing across
+	routing protocol boundaries it is required to keep a common
+	set of semantics across all routing protocols. This document
+	specifies BGP-LU extensions to be able to address Node-SIDs
+	across routing-protocol boundaries.
+	</t>
+
     </section>
 
     <section title="Deployment Considerations">
